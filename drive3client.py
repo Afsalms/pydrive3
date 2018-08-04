@@ -6,14 +6,27 @@ from apiclient import discovery
 
 
 class Client():
+    
+    """
+    Google drive3 client object
+    """
 
     def __init__(self, credential_file, scopes):
+        """
+        Creates new drive3 client object using the given credentails
+        :params credential_file: full path to the credentials.json file
+        :params scopes: Scope for the access token
+        """
         credentials = get_credentials(credential_file, scopes)
         http = credentials.authorize(httplib2.Http())
         self.service = discovery.build('drive', 'v3', http=http)
     
 
     def get_all_files(self):
+        """
+        Fetch all the files from drive
+        :return list of files
+        """
         file_details = []
         page_token = None
         while True:
@@ -29,10 +42,14 @@ class Client():
         return file_details
     
     def get_all_folder(self):
+        """
+        Fetch all the folders from drive
+        :return list of folders
+        """
         folder_details = []
         page_token = None
         while True:
-            response = self.service.files().list(q="mimeType = 'application/vnd.google-apps.folder',
+            response = self.service.files().list(q="mimeType = 'application/vnd.google-apps.folder'",
                                                     spaces='drive',
                                                     fields='nextPageToken, files(id, name)',
                                                     pageToken=page_token).execute()

@@ -8,6 +8,13 @@ from oauth2client.file import Storage
 
 
 def get_credentials(client_secret_file, scopes):
+    """
+    Method for getting the credentails from the client secret json dowloaded 
+    from google developer console
+    :params client_secret_file: Path to the client secret file
+    :params scopes: Scopes for the credentials
+    :return credentials
+    """
     try:
         import argparse
         flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
