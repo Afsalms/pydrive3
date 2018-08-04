@@ -1,4 +1,6 @@
 import httplib2
+import io
+from apiclient.http import MediaIoBaseDownload
 
 from authorize import get_credentials
 from apiclient import discovery
@@ -179,3 +181,21 @@ class Client():
             if page_token is None:
                 break
         return file_details
+    
+    def download_file(self, file_id, filename):
+        """
+        Function to download file using the given file id
+        :params file_id: file id get from google 
+        :return file
+        """
+        # file_id = '0BwwA4oUTeiV1UVNwOHItT0xfa2M'
+        request = self.service.files().export_media(fileId=file_id,
+                     mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        fh = io.FileIO(filename, "wb")
+        downloader = MediaIoBaseDownload(fh, request)
+        done = False
+        while done is False:
+            status, done = downloader.next_chunk()
+            print ("Download %d%%." % int(status.progress() * 100))
+        
+
