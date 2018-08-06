@@ -1,6 +1,6 @@
 import httplib2
 import io
-from apiclient.http import MediaIoBaseDownload
+from apiclient.http import MediaIoBaseDownload, MediaFileUpload
 
 from authorize import get_credentials
 from apiclient import discovery
@@ -182,20 +182,80 @@ class Client():
                 break
         return file_details
     
-    def download_file(self, file_id, filename):
+    def download_file(self, file_id, filename, mime_type):
         """
         Function to download file using the given file id
         :params file_id: file id get from google 
         :return file
         """
-        # file_id = '0BwwA4oUTeiV1UVNwOHItT0xfa2M'
         request = self.service.files().export_media(fileId=file_id,
-                     mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                     mimeType=mime_type)
         fh = io.FileIO(filename, "wb")
+        print(request)
+        print("helloooooooooooooooooooooooooooooo")
         downloader = MediaIoBaseDownload(fh, request)
         done = False
         while done is False:
             status, done = downloader.next_chunk()
             print ("Download %d%%." % int(status.progress() * 100))
+
+    
+    def get_child(self, parent_id):
+        """
+        Function to list child files for given folder
+        :params parent_id
+        :return list of child
+        """
+        file_details = []
+        page_token = None
+        while True:
+            query = "'{}' in parents".format(parent_id)
+            response = self.service.files().list(q=query,
+                                                    spaces='drive',
+                                                    fields='nextPageToken, files(id, name, mimeType)',
+                                                    pageToken=page_token).execute()
+            for file in response.get('files', []):
+                print(file)
+                file_details.append({"file_name": file.get("name"),
+                "id": file.get("id"), "mime_type": file.get("mimeType")})
+            page_token = response.get('nextPageToken', None)
+            if page_token is None:
+                break
+        return file_details
         
+
+
+    def create_folder(self, folder_name, parent_folder_id=None):
+        """
+        Function to create folder inside drive
+        :params folder_name: name of the folder to create
+        :params parent_folder_id: Parent folder if any else None
+        :return folder data
+        """
+        file_metadata = {
+            'name': folder_name,
+            'mimeType': 'application/vnd.google-apps.folder'
+        }
+        if parent_folder_id:
+            file_metadata['parents'] = [parent_folder_id]
+        file = self.service.files().create(body=file_metadata).execute()
+        print('Folder ID: %s' % file.get('id'))
+    
+    def create_file(self, file_name, path_to_file, parent_folder_id=None):
+        """
+        Function to create file inside drive
+        :params file_name: Name of the file to create
+        :params path_to_file: Full path to file
+        :params paraent_folder_id: Parent folder if any
+        """
+        file_metadata = {
+            'name': file_name
+        }
+        if parent_folder_id:
+            file_metadata["parents"] = [parent_folder_id]
+        media = MediaFileUpload(path_to_file, resumable=True)
+        file = self.service.files().create(body=file_metadata,
+                                    media_body=media,
+                                    fields='id').execute()
+        print ('File ID: %s' % file.get('id'))
 
