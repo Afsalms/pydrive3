@@ -2,7 +2,7 @@ import httplib2
 import io
 from apiclient.http import MediaIoBaseDownload, MediaFileUpload
 
-from authorize import get_credentials
+from .authorize import get_credentials
 from apiclient import discovery
 
 
@@ -20,8 +20,8 @@ class Client():
         :params scopes: Scope for the access token
         """
         credentials = get_credentials(credential_file, scopes)
-        http = credentials.authorize(httplib2.Http())
-        self.service = discovery.build('drive', 'v3', http=http)
+        # http = credentials.authorize(httplib2.Http())
+        self.service = discovery.build('drive', 'v3', credentials=credentials)
     
 
     def get_all_files(self):
@@ -188,11 +188,8 @@ class Client():
         :params file_id: file id get from google 
         :return file
         """
-        request = self.service.files().export_media(fileId=file_id,
-                     mimeType=mime_type)
+        request = self.service.files().export_media(fileId=file_id, mimeType=mime_type)
         fh = io.FileIO(filename, "wb")
-        print(request)
-        print("helloooooooooooooooooooooooooooooo")
         downloader = MediaIoBaseDownload(fh, request)
         done = False
         while done is False:

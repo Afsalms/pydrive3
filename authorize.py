@@ -4,6 +4,15 @@ import os
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+from oauth2client import file
+
+
+import json
+# from oauth2client.client import SignedJwtAssertionCredentials
+from google.oauth2 import service_account
+
+
+
 
 
 
@@ -15,23 +24,10 @@ def get_credentials(client_secret_file, scopes):
     :params scopes: Scopes for the credentials
     :return credentials
     """
-    try:
-        import argparse
-        flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
-    except ImportError:
-        flags = None
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
-    if not os.path.exists(credential_dir):
-        os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
-                                   'pydrive3-secret.json')
-    store = Storage(credential_path)
-    credentials = store.get()
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(client_secret_file, scopes)
-        if flags:
-            credentials = tools.run_flow(flow, store, flags)
-        else:
-            credentials = tools.run(flow, store)
+    credentials = service_account.Credentials.from_service_account_file(client_secret_file,
+        scopes=scopes)
     return credentials
+
+
+
+
