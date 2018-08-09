@@ -348,6 +348,9 @@ class Client():
 
     def share_object(self, file_id, email_list, role):
         """
-        Function to share the file or folder for list of user
+        Function to share the file or folder for list of user with a given permission
+        :params file_id: File id
+        :params email_list: list of email id user to share the details
+        :params role: Role of the user 
         """
 
