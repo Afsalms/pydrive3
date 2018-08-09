@@ -328,9 +328,26 @@ class Client():
 
     def get_file_details(self, file_id):
         """
-        Function get file using id
+        Function get file  details using id
         :params file_id: File id
         :return file details
         """
         file = self.service.files().get(fileId=file_id).execute()
         return file
+
+
+
+    def delete_file(self, file_id):
+        """
+        Function to delete the file using fild
+        :params file_id: File id
+        """
+        file = self.service.files().update(fileId=file_id, file_metadata={"trashed": True}).execute()
+        return file
+
+
+    def share_object(self, file_id, email_list, role):
+        """
+        Function to share the file or folder for list of user
+        """
+
