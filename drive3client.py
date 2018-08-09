@@ -237,13 +237,15 @@ class Client():
             file_metadata['parents'] = [parent_folder_id]
         file = self.service.files().create(body=file_metadata).execute()
         print('Folder ID: %s' % file.get('id'))
+        return file
     
     def create_file(self, file_name, path_to_file, parent_folder_id=None):
         """
         Function to create file inside drive
         :params file_name: Name of the file to create
         :params path_to_file: Full path to file
-        :params paraent_folder_id: Parent folder if any
+        :params parent_folder_id: Parent folder if any
+        :return file details
         """
         file_metadata = {
             'name': file_name
@@ -255,4 +257,72 @@ class Client():
                                     media_body=media,
                                     fields='id').execute()
         print ('File ID: %s' % file.get('id'))
+        return file
+
+    def copy_file(self, file_id, parent_folder_id):
+        """
+        Function to copy a file from one location to other
+        :params file_id: File id of the target file
+        :params parent_folder_id: Final location of the file
+        :return file details 
+        """
+        file = self.service.files().get(fileId=file_id,
+                                         fields='parents').execute()
+        file = self.service.files().update(fileId=file_id,
+                                            addParents=parent_folder_id,
+                                            fields='id, parents').execute()
+        return file
+
+
+    def move_file(self, file_id, parent_folder_id):
+        """
+        Function to move the file from one location to other
+        :params file_id: File id of the target file
+        :params parent_folder_id: Final location of the file
+        :return file details
+        """
+        file = self.service.files().get(fileId=file_id,
+                                         fields='parents').execute()
+        previous_parents = ""
+        if file.get("parents"):
+            previous_parents = ",".join(file.get('parents'))
+        file = self.service.files().update(fileId=file_id,
+                                            addParents=parent_folder_id,
+                                            removeParents=previous_parents,
+                                            fields='id, parents').execute()
+        return file
+
+
+    def copy_folder(self, folder_id, parent_folder_id):
+        """
+        Function to copy a folder from one location to other
+        :params folder_id: File id of the target folder
+        :params parent_folder_id: Final location of the file
+        :return folder details 
+        """
+        file = self.service.files().get(fileId=folder_id,
+                                         fields='parents').execute()
+        file = self.service.files().update(fileId=folder_id,
+                                            addParents=parent_folder_id,
+                                            fields='id, parents').execute()
+        return file
+
+
+    def move_folder(self, folder_id, parent_folder_id):
+        """
+        Function to move the file from one location to other
+        :params folder_id: File id of the target file
+        :params parent_folder_id: Final location of the file
+        :return file details
+        """
+        file = self.service.files().get(fileId=folder_id,
+                                         fields='parents').execute()
+        previous_parents = ""
+        if file.get("parents"):
+            previous_parents = ",".join(file.get('parents'))
+        file = self.service.files().update(fileId=folder_id,
+                                            addParents=parent_folder_id,
+                                            removeParents=previous_parents,
+                                            fields='id, parents').execute()
+        return file
 
