@@ -212,7 +212,6 @@ class Client():
                                                     fields='nextPageToken, files(id, name, mimeType)',
                                                     pageToken=page_token).execute()
             for file in response.get('files', []):
-                print(file)
                 file_details.append({"file_name": file.get("name"),
                 "id": file.get("id"), "mime_type": file.get("mimeType")})
             page_token = response.get('nextPageToken', None)
@@ -326,3 +325,12 @@ class Client():
                                             fields='id, parents').execute()
         return file
 
+
+    def get_file_details(self, file_id):
+        """
+        Function get file using id
+        :params file_id: File id
+        :return file details
+        """
+        file = self.service.files().get(fileId=file_id).execute()
+        return file
