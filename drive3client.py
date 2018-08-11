@@ -353,7 +353,7 @@ class Client():
         Function to delete the file using fild
         :params file_id: File id
         """
-        file = self.service.files().update(fileId=file_id, file_metadata={"trashed": True}).execute()
+        file = self.service.files().delete(fileId=file_id).execute()
         return file
 
 
