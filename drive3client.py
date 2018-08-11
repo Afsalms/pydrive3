@@ -221,7 +221,7 @@ class Client():
         
 
 
-    def create_folder(self, folder_name, parent_folder_id=None):
+    def create_folder(self, folder_name, parent_folder_id=None, **kwargs):
         """
         Function to create folder inside drive
         :params folder_name: name of the folder to create
@@ -236,9 +236,14 @@ class Client():
             file_metadata['parents'] = [parent_folder_id]
         file = self.service.files().create(body=file_metadata).execute()
         print('Folder ID: %s' % file.get('id'))
+        if kwargs.get("email_list"):
+            role = 'reader'
+            if kwargs.get("role"):
+                role = kwargs.get("role")
+            self.share_object(file.get("id"), kwargs.get("email_list"), role)
         return file
     
-    def create_file(self, file_name, path_to_file, parent_folder_id=None):
+    def create_file(self, file_name, path_to_file, parent_folder_id=None, **kwargs):
         """
         Function to create file inside drive
         :params file_name: Name of the file to create
@@ -256,6 +261,12 @@ class Client():
                                     media_body=media,
                                     fields='id').execute()
         print ('File ID: %s' % file.get('id'))
+        print(kwargs)
+        if kwargs.get("email_list"):
+            role = 'reader'
+            if kwargs.get("role"):
+                role = kwargs.get("role")
+            self.share_object(file.get("id"), kwargs.get("email_list"), role)
         return file
 
     def copy_file(self, file_id, parent_folder_id):
