@@ -353,4 +353,19 @@ class Client():
         :params email_list: list of email id user to share the details
         :params role: Role of the user 
         """
+        # file_id = '1sTWaJ_j7PkjzaBWtNc3IzovK5hQf21FbOw9yLeeLPNQ'
+        batch = self.service.new_batch_http_request()
+        for email in email_list:
+            user_permission = {
+                'type': 'user',
+                'role': role,
+                'emailAddress': email
+            }
+            batch.add(self.service.permissions().create(
+                    fileId=file_id,
+                    body=user_permission,
+                    fields='id',
+            ))
+        batch.execute()
+
 
