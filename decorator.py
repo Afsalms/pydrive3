@@ -1,7 +1,7 @@
 
 
 
-def exception_handle_decorator(function):
+def exceptions_handler(function):
 	"""
 	Decorator for pydrive3 for handling the exceptions:
 	:params function: ipnut function
@@ -15,3 +15,10 @@ def exception_handle_decorator(function):
 		:params kwargs: Keyword argument for the function
 		:return the fucntion case of no exception occured else raise the excption
 		"""
+
+		try:
+			return function(*args, **kwargs)
+		except Exception as e:
+			print(e)
+			# print(type(e))
+	return wrapper

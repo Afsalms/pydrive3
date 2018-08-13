@@ -1,20 +1,5 @@
 
-import os
-
-from oauth2client import client
-from oauth2client import tools
-from oauth2client.file import Storage
-from oauth2client import file
-
-
-import json
-# from oauth2client.client import SignedJwtAssertionCredentials
 from google.oauth2 import service_account
-
-
-
-
-
 
 def get_credentials(client_secret_file, scopes):
     """

@@ -4,6 +4,7 @@ from apiclient.http import MediaIoBaseDownload, MediaFileUpload
 
 from .authorize import get_credentials
 from apiclient import discovery
+from .decorator import exceptions_handler
 
 
 
@@ -13,14 +14,13 @@ class Client():
     Google drive3 client object
     """
 
-    def __init__(self, credential_file, scopes):
+    def __init__(self, credential_file):
         """
         Creates new drive3 client object using the given credentails
         :params credential_file: full path to the credentials.json file
-        :params scopes: Scope for the access token
         """
+        scopes = ["https://www.googleapis.com/auth/drive"] #allow google service full access
         credentials = get_credentials(credential_file, scopes)
-        # http = credentials.authorize(httplib2.Http())
         self.service = discovery.build('drive', 'v3', credentials=credentials)
     
 
