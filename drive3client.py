@@ -23,7 +23,7 @@ class Client():
         credentials = get_credentials(credential_file, scopes)
         self.service = discovery.build('drive', 'v3', credentials=credentials)
     
-
+    
     def get_all_files(self):
         """
         Fetch all the files from drive
@@ -235,7 +235,6 @@ class Client():
         if parent_folder_id:
             file_metadata['parents'] = [parent_folder_id]
         file = self.service.files().create(body=file_metadata).execute()
-        print('Folder ID: %s' % file.get('id'))
         if kwargs.get("email_list"):
             role = 'reader'
             if kwargs.get("role"):
@@ -260,8 +259,6 @@ class Client():
         file = self.service.files().create(body=file_metadata,
                                     media_body=media,
                                     fields='id').execute()
-        print ('File ID: %s' % file.get('id'))
-        print(kwargs)
         if kwargs.get("email_list"):
             role = 'reader'
             if kwargs.get("role"):
@@ -364,7 +361,6 @@ class Client():
         :params email_list: list of email id user to share the details
         :params role: Role of the user 
         """
-        # file_id = '1sTWaJ_j7PkjzaBWtNc3IzovK5hQf21FbOw9yLeeLPNQ'
         batch = self.service.new_batch_http_request()
         for email in email_list:
             user_permission = {
