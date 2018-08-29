@@ -12,7 +12,7 @@ setup(
     install_requires=['cachetools','google-api-python-client',
                       'google-auth','google-auth-httplib2','httplib2',
                       'pyasn1','pyasn1-modules','rsa','six','uritemplate'],
-    version='0.1',
+    version='0.1.1',
     description='A package that wrap over the google drive v3 apis',
     long_description= open('README.rst').read()
 )
