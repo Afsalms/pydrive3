@@ -1,5 +1,5 @@
 PyDriveV3 is a wrapper module for Google drive API v3 enabling easy server to server communication.
-In order to use PydriveV3 with your application you need a Google service account. Please follow steps `here <https://gist.github.com/Afsalms/6f6c88d7f013d8e7336083152c3d3dda#file-steps-to-create-service-account-txt>`_ to create a service account.
+In order to use PydriveV3 with your application you need a Google service account. Please follow steps `here <https://support.google.com/a/answer/7378726?hl=en>`_ to create a service account.
 
 
 Requirements
